@@ -15,6 +15,7 @@ install_requires = [
 tests_require = [
     'nose',
     'coverage',
+    'mock',
     ]
 
 setup(name='metfilelib',

@@ -18,4 +18,4 @@ class Profile(object):
 
 class Measurement(object):
     def __init__(self):
-
+        pass
