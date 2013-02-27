@@ -1,21 +1,17 @@
 """Python classes that represent the data in a .met file."""
 
+from collections import namedtuple
 
-class MetFile(object):
-    def __init__(self):
-        self.version = None
-        self.series = []  # Reeksen
+MetFile = namedtuple('MetFile', 'version, series')
 
+Series = namedtuple('Series', 'id, name, profiles')
 
-class Series(object):
-    # Contains one or more Profiles
-    pass
+Profile = namedtuple(
+    'Profile',
+    '''id, description, date_measurement, level_value, level_type,
+    coordinate_type, number_of_z_values, profile_type_placing,
+    start_x, start_y, measurements''')
 
-
-class Profile(object):
-    pass
-
-
-class Measurement(object):
-    def __init__(self):
-        pass
+Measurement = namedtuple(
+    'Measurement',
+    'profile_point_type, profile_point_drawing_code, x, y, z1, z2')

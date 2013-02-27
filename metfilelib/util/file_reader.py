@@ -16,7 +16,11 @@ class FileReader(object):
     Files are opened with universal line endings (\n, \r\n or
     \n\r)."""
 
-    def __init__(self, file_path, error_message_handler=sys.stderr):
+    def __init__(
+        self,
+        file_path,
+        error_message_handler=sys.stderr,
+        skip_empty_lines=False):
         """File_path is a full path to a file. It will be opened immediately,
         so if any exceptions occur, they will probably happen here.
 
@@ -31,6 +35,7 @@ class FileReader(object):
         self._open_file = open(file_path, 'rU')
         self.filename = os.path.basename(file_path)
         self._error_message_handler = error_message_handler
+        self._skip_empty_lines = skip_empty_lines
         self.line_number = 0
         self.current_line = None
         self.success = True
@@ -42,9 +47,21 @@ class FileReader(object):
         """Read the next line, if we are not already at EOF. Updates
         self.current_line and self.line_number. May result in a change
         in self.eof."""
-        if not self.eof:
-            self.current_line = self._open_file.readline()
+
+        while not self.eof:
+            byteline = self._open_file.readline()
+
+            if (self.line_number == 0 and
+                byteline.startswith(b'\xef\xbb\xbf')):
+                # UTF8 BOM
+                self.current_line = byteline[3:].decode('utf8')
+            else:
+                self.current_line = byteline.decode('utf8')
+
             self.line_number += 1
+
+            if not self._skip_empty_lines or self.current_line.strip():
+                break
 
     @property
     def eof(self):

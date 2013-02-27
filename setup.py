@@ -37,5 +37,6 @@ setup(name='metfilelib',
       extras_require={'test': tests_require},
       entry_points={
           'console_scripts': [
+            'metcat = metfilelib.scripts.read_metfile:main',
           ]},
       )
