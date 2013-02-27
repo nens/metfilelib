@@ -2,13 +2,16 @@
 
 
 class MetfileExporter(object):
+    def __init__(self, line_ending="\r\n"):
+        self._line_ending = line_ending
+
     def export_metfile(self, metfile):
         s = "<VERSIE>{0}</VERSIE>\n".format(metfile.version)
 
         for series in metfile.series:
             s += self.export_series(series)
 
-        return s
+        return s.replace("\n", self._line_ending)
 
     def export_series(self, series):
         s = "<REEKS>{series_id},{series_name},</REEKS>\n".format(

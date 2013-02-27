@@ -1,34 +1,14 @@
 metfilelib
 ==========================================
 
-Introduction
+This is a library for working with MET files as read by IRIS.
 
-Usage, etc.
+A MET file is represented by the metfilelib.metfile.MetFile
+class. Class instances are immutable.
 
+To read in a MET file, use the metfilelib.parser.parse_metfile()
+function.  The file_object argument can be created using
+metfilelib.util.file_read.FileReader. By default, errors go to stderr,
+but you can pass your own error handler to the FileReader.
 
-Post-nensskel setup TODO
-------------------------
-
-Here are some instructions on what to do after you've created the project with
-nensskel.
-
-- Fill in a short description on https://github.com/lizardsystem/metfilelib or
-  https://github.com/nens/metfilelib if you haven't done so already.
-
-- Use the same description in the ``setup.py``'s "description" field.
-
-- Fill in your username and email address in the ``setup.py``, see the
-  ``TODO`` fields.
-
-- Check https://github.com/nens/metfilelib/settings/collaboration if the team
-  "Nelen & Schuurmans" has access.
-
-- Add a new jenkins job at
-  http://buildbot.lizardsystem.nl/jenkins/view/djangoapps/newJob or
-  http://buildbot.lizardsystem.nl/jenkins/view/libraries/newJob . Job name
-  should be "metfilelib", make the project a copy of the existing "lizard-wms"
-  project (for django apps) or "nensskel" (for libraries). On the next page,
-  change the "github project" to ``https://github.com/nens/metfilelib/`` and
-  "repository url" fields to ``git@github.com:nens/metfilelib.git`` (you might
-  need to replace "nens" with "lizardsystem"). The rest of the settings should
-  be OK.
+To write a MET file, use metfilelib.exporters.MetfileExporter.

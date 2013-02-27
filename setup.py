@@ -20,13 +20,13 @@ tests_require = [
 
 setup(name='metfilelib',
       version=version,
-      description="TODO",
+      description="Library for working with MET files (ingemeten dwarsprofielen)",
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[],
       keywords=[],
-      author='TODO',
-      author_email='TODO@nelen-schuurmans.nl',
+      author='Remco Gerlich',
+      author_email='remco.gerich@nelen-schuurmans.nl',
       url='',
       license='GPL',
       packages=['metfilelib'],

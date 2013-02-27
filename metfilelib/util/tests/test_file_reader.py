@@ -29,9 +29,11 @@ def mock_file_factory(lines):
 
 class TestFileReader(TestCase):
     def test_with_two_lines(self):
+        # Must be byte strings -- when they come out of the file,
+        # they're bytes
         lines = [
-            "This is the first line\n",
-            "This is the second line\n"
+            b"This is the first line\n",
+            b"This is the second line\n"
             ]
 
         with mock.patch(
