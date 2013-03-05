@@ -14,3 +14,6 @@ Changelog of metfilelib
 - Developed metfile.py, parser.parse_metfile and
   exporters.MetfileExporter to the point where a correct MET file can
   be read in and printed out.
+
+- Developed a bit further so that a file can be uploaded now, but still
+  definitely work in progress.

@@ -64,18 +64,14 @@ class TestFileReader(TestCase):
         self.assertTrue(reader.eof)
         self.assertTrue(reader.success)
 
-    def test_make_error(self):
-        handler = mock.MagicMock()
+    def test_record_error(self):
         with mock.patch('__builtin__.open'):
-
             reader = file_reader.FileReader(
-                file_path="/some/filename",
-                error_message_handler=handler)
+                file_path="/some/filename")
 
         self.assertTrue(reader.success)
 
-        reader.make_error("test error")
+        reader.record_error("test error", "CODE")
 
         self.assertFalse(reader.success)
-        handler.write.assert_called_with(
-            "filename 1: test error\n")
+        self.assertEquals(len(reader.errors), 1)

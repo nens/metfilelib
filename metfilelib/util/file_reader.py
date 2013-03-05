@@ -2,8 +2,11 @@
 from __future__ import print_function, unicode_literals
 from __future__ import absolute_import, division
 
+import collections
 import os
-import sys
+
+
+Error = collections.namedtuple('Error', 'line, error_code, error_message')
 
 
 class FileReader(object):
@@ -19,7 +22,6 @@ class FileReader(object):
     def __init__(
         self,
         file_path,
-        error_message_handler=sys.stderr,
         skip_empty_lines=False):
         """File_path is a full path to a file. It will be opened immediately,
         so if any exceptions occur, they will probably happen here.
@@ -34,10 +36,10 @@ class FileReader(object):
 
         self._open_file = open(file_path, 'rU')
         self.filename = os.path.basename(file_path)
-        self._error_message_handler = error_message_handler
         self._skip_empty_lines = skip_empty_lines
         self.line_number = 0
         self.current_line = None
+        self.errors = []
         self.success = True
 
         # Read the first line
@@ -68,15 +70,12 @@ class FileReader(object):
         """Return True if we are at end of file."""
         return self.current_line == ''
 
-    def make_error(self, error_message):
-        """Format an error message and send it to the error message handler.
+    def record_error(self, error_message, error_code=None):
+        """Record an error and set success to False."""
 
-        After this function is called at least once, self.success is
-        False."""
-        error = "{filename} {line}: {error}\n".format(
-            filename=self.filename,
-            line=self.line_number,
-            error=error_message)
+        self.errors.append(Error(
+                line=self.line_number,
+                error_code=error_code,
+                error_message=error_message))
 
-        self._error_message_handler.write(error)
         self.success = False
