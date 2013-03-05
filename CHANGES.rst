@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.1 (unreleased)
+0.1 (2013-03-05)
 ----------------
 
 - Initial project structure created with nensskel 1.31.dev0.
