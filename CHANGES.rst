@@ -5,7 +5,11 @@ Changelog of metfilelib
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Increased the number of error messages. Only error messages to do
+  with the correctness of the file are given, checking that the
+  content is up to some spec is left to client code.
+
+- See error_codes.rst in the docs/ dir for a list of error codes.
 
 
 0.1 (2013-03-05)
