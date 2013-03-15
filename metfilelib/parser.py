@@ -14,15 +14,6 @@ from metfilelib import metfile
 
 
 def parse_metfile(file_object):
-    # file_object has properties:
-    # file_object.record_error(error_message, error_code)
-    # file_object.line_number
-    # file_object.filename
-    # file_object.current_line  # Lookahead
-    # file_object.next() # Goes to the next line
-    # file_object.eof # True if end of file
-    # file_object.success  # True if record_error() was never called
-
     if (not file_object.filename.lower().endswith(b".met")
         or not file_object.current_line.strip().startswith("<VERSIE>")):
         # File isn't a MET file
@@ -43,8 +34,8 @@ def parse_version(file_object):
         version = l[len("<VERSIE>"):-len("</VERSIE>")]
     else:
         file_object.record_error(
-            "Regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
-            "VERSIE")
+            "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
+            "MET_NOVERSION")
         version = "?"
 
     file_object.next()
@@ -55,14 +46,20 @@ def parse_series(file_object):
     l = file_object.current_line.strip()
     line_number = file_object.line_number
 
+    if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
+        file_object.record_error(
+            "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
+            "MET_NOREEKS")
+
     seriesre = re.compile("<REEKS>(.*),(.*),</REEKS>")
     match = seriesre.match(l)
     if not match:
         file_object.record_error(
-            "Verwachtte een correcte <REEKS>, vond {0}".format(l),
-            "REEKS")
+            "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
+            "MET_REEKSELEMENTS")
         file_object.next()
         return
+
     series_id = match.group(1)
     series_name = match.group(2)
 
@@ -73,7 +70,9 @@ def parse_series(file_object):
         profiles.append(parse_profile(file_object))
 
     if not profiles:
-        file_object.record_error("Reeks zonder profielen", "NOPROFILES")
+        file_object.record_error(
+            "Reeks werd niet gevolgd door profielen",
+            "MET_NOPROFILES")
 
     return metfile.Series(
             line_number=line_number, id=series_id,
@@ -84,13 +83,26 @@ def parse_profile(file_object):
     l = file_object.current_line.strip()
     line_number = file_object.line_number
 
+    if not l.startswith("<PROFIEL>"):
+        file_object.record_error(
+            "Profiel regel moet beginnen met <PROFIEL>",
+            "MET_NOPROFIEL")
+
     profilere = re.compile("<PROFIEL>" + 10 * "(.*),")
     match = profilere.match(l)
 
     if not match:
         file_object.record_error(
-            "Verwachtte een correct <PROFIEL>, vond {0}".format(l), "PROFIEL")
+            "Profiel regel moet 10 door komma's gescheiden elementen bevatten",
+            "MET_PROFIELELEMENTS")
         return
+
+    try:
+        number_of_z_values = int(match.group(7))
+    except ValueError:
+        file_object.record_error(
+            "Aantal z waarden moet een geheel getal zijn.")
+        number_of_z_values = 2
 
     file_object.next()
 
@@ -99,14 +111,17 @@ def parse_profile(file_object):
         measurements.append(parse_meting(file_object))
 
     if file_object.current_line.strip() != "</PROFIEL>":
-        file_object.record_error("Verwachtte </PROFIEL> tag.", "NO/PROFIEL")
+        file_object.record_error(
+            "Eerste regel na <METING> regels moet </PROFIEL> zijn",
+            "MET_NOENDPROFIEL")
     else:
         file_object.next()
 
     date_measurement = parse_date(match.group(3))
     if date_measurement is None:
         file_object.record_error(
-            "Ongeldige JJJJMMDD datum: {0}".format(match.group(3)))
+      "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
+            "MET_WRONGDATE")
         return
 
     return metfile.Profile(
@@ -117,7 +132,7 @@ def parse_profile(file_object):
         level_value=match.group(4),
         level_type=match.group(5),
         coordinate_type=match.group(6),
-        number_of_z_values=match.group(7),
+        number_of_z_values=number_of_z_values,
         profile_type_placing=match.group(8),
         start_x=match.group(9),
         start_y=match.group(10),
@@ -128,25 +143,47 @@ def parse_meting(file_object):
     l = file_object.current_line.strip()
     line_number = file_object.line_number
 
-    metingre = re.compile("<METING>" + 5 * "(.*)," + "(.*)</METING>")
-    match = metingre.match(l)
-
-    if not match:
-        file_object.record_error(
-            "Verwachtte een <METING> regel, vond {0}".format(l), "NOMETING")
+    if not l.startswith("<METING>"):
+        file_object.record_error("Regel moet beginnen met <METING>.")
         file_object.next()
         return
+    if not l.endswith("</METING>"):
+        file_object.record_error("Regel moet eindigen met </METING>.")
+        file_object.next()
+        return
+
+    metingre = re.compile("<METING>(.*)</METING>")
+    match = metingre.match(l)
+
+    groups = match.group(1).split(",")
+    if len(groups) != 6:
+        file_object.record_error(
+     "Een <METING> regel moet 6 met komma's gescheiden elementen bevatten")
+        file_object.next()
+        return
+
+    try:
+        z1 = float(groups[4])
+    except ValueError:
+        z1 = 0.0
+        file_object.record_error("Z1 moet een decimaal getal zijn.")
+
+    try:
+        z2 = float(groups[5])
+    except ValueError:
+        z2 = 0.0
+        file_object.record_error("Z2 moet een decimaal getal zijn.")
 
     file_object.next()
 
     return metfile.Measurement(
         line_number=line_number,
-        profile_point_type=match.group(1),
-        profile_point_drawing_code=match.group(2),
-        x=match.group(3),
-        y=match.group(4),
-        z1=match.group(5),
-        z2=match.group(6))
+        profile_point_type=groups[0],
+        profile_point_drawing_code=groups[1],
+        x=groups[2],
+        y=groups[3],
+        z1=z1,
+        z2=z2)
 
 
 def parse_date(date_string):
