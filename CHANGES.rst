@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.2 (unreleased)
+0.2 (2013-03-15)
 ----------------
 
 - Increased the number of error messages. Only error messages to do
