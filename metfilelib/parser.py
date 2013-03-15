@@ -108,6 +108,14 @@ def parse_profile(file_object):
             "Aantal z waarden moet een geheel getal zijn.")
         number_of_z_values = 2
 
+    try:
+        level_value = float(match.group(4))
+    except ValueError:
+        file_object.record_error(
+            "Peilniveau moet een decimaal getal zijn, was {0}".
+            format(match.group(4)))
+        level_value = 0.0
+
     file_object.next()
 
     measurements = []
@@ -135,7 +143,7 @@ def parse_profile(file_object):
         id=match.group(1),
         description=match.group(2),
         date_measurement=date_measurement,
-        level_value=match.group(4),
+        level_value=level_value,
         level_type=match.group(5),
         coordinate_type=match.group(6),
         number_of_z_values=number_of_z_values,
