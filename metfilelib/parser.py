@@ -32,7 +32,9 @@ def parse_metfile(file_object):
 
     series = []
     while not file_object.eof:
-        series.append(parse_series(file_object))
+        serie = parse_series(file_object)
+        if serie is not None:
+            series.append(serie)
 
     return metfile.MetFile(version=version, series=tuple(series))
 
@@ -70,7 +72,9 @@ def parse_series(file_object):
 
     profiles = []
     while file_object.current_line.startswith("<PROFIEL>"):
-        profiles.append(parse_profile(file_object))
+        profile = parse_profile(file_object)
+        if profile is not None:
+            profiles.append(profile)
 
     if not profiles:
         file_object.record_error("Reeks zonder profielen", "NOPROFILES")
@@ -96,7 +100,9 @@ def parse_profile(file_object):
 
     measurements = []
     while file_object.current_line.strip().startswith("<METING>"):
-        measurements.append(parse_meting(file_object))
+        meting = parse_meting(file_object)
+        if meting is not None:
+            measurements.append(meting)
 
     if file_object.current_line.strip() != "</PROFIEL>":
         file_object.record_error("Verwachtte </PROFIEL> tag.", "NO/PROFIEL")
