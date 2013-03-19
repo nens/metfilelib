@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.3 (unreleased)
+0.3 (2013-03-19)
 ----------------
 
 - Translate coordinates to floats.
