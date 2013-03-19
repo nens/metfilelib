@@ -14,8 +14,7 @@ from metfilelib import metfile
 
 
 def parse_metfile(file_object):
-    if (not file_object.filename.lower().endswith(b".met")
-        or not file_object.current_line.strip().startswith("<VERSIE>")):
+    if not file_object.filename.lower().endswith(b".met"):
         # File isn't a MET file
         return None
 
@@ -36,8 +35,8 @@ def parse_version(file_object):
         version = l[len("<VERSIE>"):-len("</VERSIE>")]
     else:
         file_object.record_error(
-            "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
-            "MET_NOVERSION")
+          "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
+          "MET_NOVERSION")
         version = "?"
 
     file_object.next()
@@ -99,6 +98,7 @@ def parse_profile(file_object):
         file_object.record_error(
             "Profiel regel moet 10 door komma's gescheiden elementen bevatten",
             "MET_PROFIELELEMENTS")
+        file_object.next()
         return
 
     try:
@@ -115,6 +115,22 @@ def parse_profile(file_object):
             "Peilniveau moet een decimaal getal zijn, was {0}".
             format(match.group(4)))
         level_value = 0.0
+
+    try:
+        start_x = float(match.group(9))
+    except ValueError:
+        file_object.record_error(
+            "X moet een decimaal getal zijn, was {0}".
+            format(match.group(9)))
+        start_x = 0
+
+    try:
+        start_y = float(match.group(9))
+    except ValueError:
+        file_object.record_error(
+            "Y moet een decimaal getal zijn, was {0}".
+            format(match.group(9)))
+        start_y = 0
 
     file_object.next()
 
@@ -148,8 +164,8 @@ def parse_profile(file_object):
         coordinate_type=match.group(6),
         number_of_z_values=number_of_z_values,
         profile_type_placing=match.group(8),
-        start_x=match.group(9),
-        start_y=match.group(10),
+        start_x=start_x,
+        start_y=start_y,
         measurements=tuple(measurements))
 
 
@@ -188,14 +204,26 @@ def parse_meting(file_object):
         z2 = 0.0
         file_object.record_error("Z2 moet een decimaal getal zijn.")
 
+    try:
+        x = float(groups[2])
+    except ValueError:
+        x = 0.0
+        file_object.record_error("X moet een decimaal getal zijn.")
+
+    try:
+        y = float(groups[3])
+    except ValueError:
+        y = 0.0
+        file_object.record_error("Y moet een decimaal getal zijn.")
+
     file_object.next()
 
     return metfile.Measurement(
         line_number=line_number,
         profile_point_type=groups[0],
         profile_point_drawing_code=groups[1],
-        x=groups[2],
-        y=groups[3],
+        x=x,
+        y=y,
         z1=z1,
         z2=z2)
 
