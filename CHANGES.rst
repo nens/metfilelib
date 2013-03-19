@@ -5,7 +5,9 @@ Changelog of metfilelib
 0.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Translate coordinates to floats.
+
+- Add tests.
 
 
 0.2 (2013-03-15)
