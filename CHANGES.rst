@@ -5,7 +5,10 @@ Changelog of metfilelib
 0.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Check on version number 1.0.
+
+- Try to continue parsing if the second comma in a <REEKS> element is
+  missing.
 
 
 0.3 (2013-03-19)

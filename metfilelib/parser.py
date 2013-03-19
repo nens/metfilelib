@@ -33,6 +33,9 @@ def parse_version(file_object):
     l = file_object.current_line.strip()
     if l.startswith("<VERSIE>") and l.endswith("</VERSIE>"):
         version = l[len("<VERSIE>"):-len("</VERSIE>")]
+        if version != '1.0':
+            file_object.record_error("Versie moet 1.0 zijn.")
+            version = "?"
     else:
         file_object.record_error(
           "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
@@ -58,8 +61,13 @@ def parse_series(file_object):
         file_object.record_error(
             "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
             "MET_REEKSELEMENTS")
-        file_object.next()
-        return
+
+        # Try to continue parsing without the second comma
+        seriesre = re.compile("<REEKS>(.*),(.*)</REEKS>")
+        match = seriesre.match(l)
+        if not match:
+            file_object.next()
+            return
 
     series_id = match.group(1)
     series_name = match.group(2)
