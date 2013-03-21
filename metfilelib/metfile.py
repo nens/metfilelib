@@ -44,6 +44,17 @@ class Profile(namedtuple(
         return linear_algebra.Line(start=start, end=end)
 
     @property
+    def midpoint(self):
+        """Point in the middle of the base line"""
+        line = self.line
+        if line is None:
+            return None
+
+        # Say line is A to B
+        # Midpoint is ((B-A)*0.5)+A
+        return line.end.subtract(line.start).multiply(0.5).add(line.start)
+
+    @property
     def sorted_measurements(self):
         """Project points on the base line, return them in order."""
         line = self.line
