@@ -10,6 +10,11 @@ Changelog of metfilelib
 - Try to continue parsing if the second comma in a <REEKS> element is
   missing.
 
+- Fix some bugs in parsing
+
+- Added tools that retrieve some profile from a MET file, and can recreate
+  an entire MetFile object from such retrieved profiles
+
 
 0.3 (2013-03-19)
 ----------------
