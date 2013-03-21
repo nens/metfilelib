@@ -31,48 +31,58 @@ def parse_metfile(file_object):
 
 def parse_version(file_object):
     l = file_object.current_line.strip()
-    if l.startswith("<VERSIE>") and l.endswith("</VERSIE>"):
-        version = l[len("<VERSIE>"):-len("</VERSIE>")]
-        if version != '1.0':
-            file_object.record_error("Versie moet 1.0 zijn.")
-            version = "?"
-    else:
-        file_object.record_error(
+    if "versie" in l.lower():
+        if l.startswith("<VERSIE>") and l.endswith("</VERSIE>"):
+            version = l[len("<VERSIE>"):-len("</VERSIE>")]
+            if version != '1.0':
+                file_object.record_error("Versie moet 1.0 zijn.")
+                version = "?"
+        else:
+            file_object.record_error(
           "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
           "MET_NOVERSION")
-        version = "?"
-
-    file_object.next()
-    return version
+            version = "?"
+        file_object.next()
+        return version
+    else:
+        file_object.record_error("Geen versieregel gevonden.")
+        # If the line probably wasn't the VERSIE line (because it's
+        # missing?), don't go to the next line.
 
 
 def parse_series(file_object):
     l = file_object.current_line.strip()
     line_number = file_object.line_number
 
-    if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
-        file_object.record_error(
-            "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
-            "MET_NOREEKS")
+    match = None
 
-    seriesre = re.compile("<REEKS>(.*),(.*),</REEKS>")
-    match = seriesre.match(l)
-    if not match:
-        file_object.record_error(
-            "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
-            "MET_REEKSELEMENTS")
+    if "REEKS" not in l:
+        file_object.record_error("Verwachtte een <REEKS> regel.")
+    else:
+        if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
+            file_object.record_error(
+          "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
+          "MET_NOREEKS")
+        else:
+            seriesre = re.compile("<REEKS>(.*),(.*),</REEKS>")
+            match = seriesre.match(l)
+            if not match:
+                file_object.record_error(
+              "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
+              "MET_REEKSELEMENTS")
 
-        # Try to continue parsing without the second comma
-        seriesre = re.compile("<REEKS>(.*),(.*)</REEKS>")
-        match = seriesre.match(l)
-        if not match:
-            file_object.next()
-            return
+                # Try to continue parsing without the second comma
+                seriesre = re.compile("<REEKS>(.*),(.*)</REEKS>")
+                match = seriesre.match(l)
 
-    series_id = match.group(1)
-    series_name = match.group(2)
+        file_object.next()
 
-    file_object.next()
+    if match:
+        series_id = match.group(1)
+        series_name = match.group(2)
+    else:
+        series_id = None
+        series_name = None
 
     profiles = []
     while file_object.current_line.startswith("<PROFIEL>"):
@@ -99,7 +109,7 @@ def parse_profile(file_object):
             "Profiel regel moet beginnen met <PROFIEL>",
             "MET_NOPROFIEL")
 
-    profilere = re.compile("<PROFIEL>" + 10 * "(.*),")
+    profilere = re.compile("<PROFIEL>" + 10 * "([^,]*),")
     match = profilere.match(l)
 
     if not match:
@@ -133,17 +143,17 @@ def parse_profile(file_object):
         start_x = 0
 
     try:
-        start_y = float(match.group(9))
+        start_y = float(match.group(10))
     except ValueError:
         file_object.record_error(
             "Y moet een decimaal getal zijn, was {0}".
-            format(match.group(9)))
+            format(match.group(10)))
         start_y = 0
 
     file_object.next()
 
     measurements = []
-    while file_object.current_line.strip().startswith("<METING>"):
+    while "meting" in file_object.current_line.strip().lower():
         meting = parse_meting(file_object)
         if meting is not None:
             measurements.append(meting)

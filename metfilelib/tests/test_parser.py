@@ -40,6 +40,15 @@ class TestVersion(TestCase):
         parser.parse_version(reader)
         self.assertFalse(reader.success)
 
+    def test_if_version_line_missing_doesnt_move_line_number(self):
+        reader = get_mock_reader([
+                b"<REEKS>testing,testing,</REEKS>\n"
+            ])
+
+        parser.parse_version(reader)
+        self.assertFalse(reader.success)
+        self.assertEquals(reader.line_number, 1)
+
 
 class TestParseSeries(TestCase):
     def test_success_with_correct_line(self):
@@ -66,6 +75,23 @@ b"<METING>99,999,152168.475,444100.136,1.556,1.661</METING>\n",
         result = parser.parse_series(reader)
         self.assertFalse(reader.success)
         self.assertNotEqual(result, None)
+
+
+class TestParseProfiel(TestCase):
+    def test_this_example_appears_to_loop_forever(self):
+        reader = get_mock_reader([
+                b"<PROFIEL>W81-2_1,Profiel_1,20130114,0,NAP,ABS,2,XY,112372.752,485955.504,\n",
+                b"METING>1,999,112372.752,485955.504,-4.255,-4.255</METING>\n",
+                b"<METING>22,999,112373.939,485957.095,-5.824,-5.824</METING>\n",
+                b"<METING>5,999,112373.945,485957.103,-5.874,-5.844</METING>\n",
+                b"<METING>5,999,112374.248,485957.488,-6.044,-5.984</METING>\n",
+                b"<METING>5,999,112374.557,485957.881,-6.154,-6.084</METING>\n",
+                b"<METING>22,999,112378.091,485962.366,-5.824,-5.824</METING>\n",
+                b"<METING>2,999,112378.509,485962.92,-5.241,-5.241</METING>\n",
+                b"</PROFIEL>\n"
+                ])
+        parser.parse_profile(reader)
+        self.assertEquals(reader.line_number, 10)
 
 
 class TestParseMeting(TestCase):
