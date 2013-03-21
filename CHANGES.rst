@@ -15,6 +15,9 @@ Changelog of metfilelib
 - Added tools that retrieve some profile from a MET file, and can recreate
   an entire MetFile object from such retrieved profiles
 
+- Added tools for projection X, Y points from measurements, projecting them on
+  a base line, and sorting measurements based on their projection on the line.
+
 
 0.3 (2013-03-19)
 ----------------
