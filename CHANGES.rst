@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.4 (unreleased)
+0.4 (2013-03-21)
 ----------------
 
 - Check on version number 1.0.
