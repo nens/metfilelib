@@ -5,7 +5,10 @@ Changelog of metfilelib
 0.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add version codes for all parser errors.
+
+- Add a method distance() to Point that calculates distance to another
+  point.
 
 
 0.4 (2013-03-21)

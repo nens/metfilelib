@@ -35,7 +35,8 @@ def parse_version(file_object):
         if l.startswith("<VERSIE>") and l.endswith("</VERSIE>"):
             version = l[len("<VERSIE>"):-len("</VERSIE>")]
             if version != '1.0':
-                file_object.record_error("Versie moet 1.0 zijn.")
+                file_object.record_error(
+                    "Versie moet 1.0 zijn.", "MET_WRONGVERSION")
                 version = "?"
         else:
             file_object.record_error(
@@ -45,7 +46,8 @@ def parse_version(file_object):
         file_object.next()
         return version
     else:
-        file_object.record_error("Geen versieregel gevonden.")
+        file_object.record_error(
+            "Geen versieregel gevonden.", "MET_NOVERSION")
         # If the line probably wasn't the VERSIE line (because it's
         # missing?), don't go to the next line.
 
@@ -56,8 +58,10 @@ def parse_series(file_object):
 
     match = None
 
-    if "REEKS" not in l:
-        file_object.record_error("Verwachtte een <REEKS> regel.")
+    if "reeks" not in l.lower():
+        file_object.record_error(
+            "Verwachtte een <REEKS> regel.",
+            "MET_REEKSNOTFOUND")
     else:
         if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
             file_object.record_error(
@@ -123,7 +127,8 @@ def parse_profile(file_object):
         number_of_z_values = int(match.group(7))
     except ValueError:
         file_object.record_error(
-            "Aantal z waarden moet een geheel getal zijn.")
+            "Aantal z waarden moet een geheel getal zijn.",
+            "MET_NUMZVALUES_INT")
         number_of_z_values = 2
 
     try:
@@ -131,7 +136,8 @@ def parse_profile(file_object):
     except ValueError:
         file_object.record_error(
             "Peilniveau moet een decimaal getal zijn, was {0}".
-            format(match.group(4)))
+            format(match.group(4)),
+            "MET_LEVELVALUEFLOAT")
         level_value = 0.0
 
     try:
@@ -139,7 +145,8 @@ def parse_profile(file_object):
     except ValueError:
         file_object.record_error(
             "X moet een decimaal getal zijn, was {0}".
-            format(match.group(9)))
+            format(match.group(9)),
+            "MET_STARTXFLOAT")
         start_x = 0
 
     try:
@@ -147,7 +154,8 @@ def parse_profile(file_object):
     except ValueError:
         file_object.record_error(
             "Y moet een decimaal getal zijn, was {0}".
-            format(match.group(10)))
+            format(match.group(10)),
+            "MET_STARTYFLOAT")
         start_y = 0
 
     file_object.next()
@@ -192,11 +200,15 @@ def parse_meting(file_object):
     line_number = file_object.line_number
 
     if not l.startswith("<METING>"):
-        file_object.record_error("Regel moet beginnen met <METING>.")
+        file_object.record_error(
+            "Regel moet beginnen met <METING>.",
+            "MET_METINGLINEWRONG")
         file_object.next()
         return
     if not l.endswith("</METING>"):
-        file_object.record_error("Regel moet eindigen met </METING>.")
+        file_object.record_error(
+            "Regel moet eindigen met </METING>.",
+            "MET_METINGLINEWRONG")
         file_object.next()
         return
 
@@ -204,9 +216,17 @@ def parse_meting(file_object):
     match = metingre.match(l)
 
     groups = match.group(1).split(",")
+
+    if len(groups) == 7 and not groups[6]:
+        # There are 7, but the last one is empty (extra comma):
+        # just remove it, because apparently that's sometimes treated as
+        # the right way to do it
+        groups = groups[:6]
+
     if len(groups) != 6:
         file_object.record_error(
-     "Een <METING> regel moet 6 met komma's gescheiden elementen bevatten")
+     "Een <METING> regel moet 6 met komma's gescheiden elementen bevatten",
+     "MET_METINGSIXVALUES")
         file_object.next()
         return
 
@@ -214,25 +234,33 @@ def parse_meting(file_object):
         z1 = float(groups[4])
     except ValueError:
         z1 = 0.0
-        file_object.record_error("Z1 moet een decimaal getal zijn.")
+        file_object.record_error(
+            "Z1 moet een decimaal getal zijn.",
+            "MET_Z1FLOAT")
 
     try:
         z2 = float(groups[5])
     except ValueError:
         z2 = 0.0
-        file_object.record_error("Z2 moet een decimaal getal zijn.")
+        file_object.record_error(
+            "Z2 moet een decimaal getal zijn.",
+            "MET_Z2FLOAT")
 
     try:
         x = float(groups[2])
     except ValueError:
         x = 0.0
-        file_object.record_error("X moet een decimaal getal zijn.")
+        file_object.record_error(
+            "X moet een decimaal getal zijn.",
+            "MET_XFLOAT")
 
     try:
         y = float(groups[3])
     except ValueError:
         y = 0.0
-        file_object.record_error("Y moet een decimaal getal zijn.")
+        file_object.record_error(
+            "Y moet een decimaal getal zijn.",
+            "MET_YFLOAT")
 
     file_object.next()
 

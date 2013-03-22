@@ -36,6 +36,9 @@ class Point(namedtuple('Point', 'x, y')):
     def size(self):
         return math.sqrt(self.x * self.x + self.y * self.y)
 
+    def distance(self, point):
+        return self.subtract(point).size
+
     def dot_product(self, point):
         return self.x * point.x + self.y * point.y
 
@@ -77,3 +80,21 @@ class Line(namedtuple('Line', 'start, end')):
         projected = t_projected.add(self.start)
 
         return projected
+
+    def angle(self, line):
+        """Translate both lines back so they start at the origin, then
+        return the angle between them."""
+        pass
+
+
+def line_segments(points):
+    """Return a list of lines, one from point 0 to 1, one from point 1
+    to 2..."""
+
+    if len(points) < 2:
+        return []
+
+    return [
+        Line(start=points[i], end=points[i + 1])
+        for i in range(len(points) - 1)
+        ]
