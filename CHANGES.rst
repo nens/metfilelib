@@ -5,8 +5,16 @@ Changelog of metfilelib
 0.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Add a waterlevel property to Profile, that checks the z1/z2 values at the
+  22 profile point codes.
 
+- Improved error handling, we got infinite loops in some cases, avoid them.
+
+- Line now has midpoint and length properties.
+
+- Line has a function distance_to_midpoint, which projects points on the line then
+  checks how far from the midpoint it is, with the side of the start point getting
+  negative numbers. Useful as X values on plots.
 
 0.5 (2013-03-22)
 ----------------

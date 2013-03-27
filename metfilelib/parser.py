@@ -13,6 +13,11 @@ import re
 from metfilelib import metfile
 
 
+def skip_until_x_in_line(file_object, x):
+    while not file_object.eof and x not in file_object.current_line.lower():
+        file_object.next()
+
+
 def parse_metfile(file_object):
     if not file_object.filename.lower().endswith(b".met"):
         # File isn't a MET file
@@ -58,10 +63,15 @@ def parse_series(file_object):
 
     match = None
 
+    series_id = None
+    series_name = None
+
     if "reeks" not in l.lower():
         file_object.record_error(
             "Verwachtte een <REEKS> regel.",
             "MET_REEKSNOTFOUND")
+        file_object.next()
+        return
     else:
         if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
             file_object.record_error(
@@ -70,7 +80,11 @@ def parse_series(file_object):
         else:
             seriesre = re.compile("<REEKS>(.*),(.*),</REEKS>")
             match = seriesre.match(l)
-            if not match:
+
+            if match:
+                series_id = match.group(1)
+                series_name = match.group(2)
+            else:
                 file_object.record_error(
               "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
               "MET_REEKSELEMENTS")
@@ -78,18 +92,12 @@ def parse_series(file_object):
                 # Try to continue parsing without the second comma
                 seriesre = re.compile("<REEKS>(.*),(.*)</REEKS>")
                 match = seriesre.match(l)
-
         file_object.next()
 
-    if match:
-        series_id = match.group(1)
-        series_name = match.group(2)
-    else:
-        series_id = None
-        series_name = None
-
     profiles = []
-    while file_object.current_line.startswith("<PROFIEL>"):
+
+    while (not file_object.eof and
+           not file_object.current_line.lower().startswith("<reeks")):
         profile = parse_profile(file_object)
         if profile is not None:
             profiles.append(profile)
@@ -120,6 +128,7 @@ def parse_profile(file_object):
         file_object.record_error(
             "Profiel regel moet 10 door komma's gescheiden elementen bevatten",
             "MET_PROFIELELEMENTS")
+        skip_until_x_in_line(file_object, "</profiel>")
         file_object.next()
         return
 

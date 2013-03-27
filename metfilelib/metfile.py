@@ -44,6 +44,28 @@ class Profile(namedtuple(
         return linear_algebra.Line(start=start, end=end)
 
     @property
+    def waterlevel(self):
+        """Return the water level.
+
+        If there are exactly two '22' profile point types, and their
+        z1 and z2 values are all equal, then that's the water
+        level. Otherwise return None."""
+
+        twentytwos = [m for m in self.measurements
+                      if m.profile_point_type == '22']
+
+        if len(twentytwos) != 2:
+            return None
+
+        start = twentytwos[0]
+        end = twentytwos[1]
+
+        if start.z1 == start.z2 == end.z1 == end.z2:
+            return start.z1
+
+        return None
+
+    @property
     def midpoint(self):
         """Point in the middle of the base line"""
         line = self.line
@@ -52,7 +74,7 @@ class Profile(namedtuple(
 
         # Say line is A to B
         # Midpoint is ((B-A)*0.5)+A
-        return line.end.subtract(line.start).multiply(0.5).add(line.start)
+        return line.midpoint
 
     @property
     def sorted_measurements(self):

@@ -49,6 +49,14 @@ ORIGIN = Point(x=0.0, y=0.0)
 
 
 class Line(namedtuple('Line', 'start, end')):
+    @property
+    def length(self):
+        return self.start.distance(self.end)
+
+    @property
+    def midpoint(self):
+        return self.start.add(self.end).multiply(0.5)
+
     def scaled_scalar_projection(self, point):
         """Project point on this line, return place on the line where
         start is at 0.0 and end is at 1.0.
@@ -80,6 +88,11 @@ class Line(namedtuple('Line', 'start, end')):
         projected = t_projected.add(self.start)
 
         return projected
+
+    def distance_to_midpoint(self, point):
+        """Project point on line, return distance to midpoint, negative if it
+        is to the left."""
+        return (self.scaled_scalar_projection(point) - 0.5) * self.length
 
     def angle(self, line):
         """Translate both lines back so they start at the origin, then
