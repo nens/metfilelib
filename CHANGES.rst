@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.6 (unreleased)
+0.6 (2013-03-27)
 ----------------
 
 - Add a waterlevel property to Profile, that checks the z1/z2 values at the
