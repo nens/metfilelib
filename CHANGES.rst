@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.7 (unreleased)
+0.7 (2013-03-29)
 ----------------
 
 - Make it possible to generate a MET file that sorts its measurements
