@@ -2,7 +2,8 @@
 
 
 class MetfileExporter(object):
-    def __init__(self, line_ending="\r\n"):
+    def __init__(self, want_sorted_measurements=False, line_ending="\r\n"):
+        self.want_sorted_measurements = want_sorted_measurements
         self._line_ending = line_ending
 
     def export_metfile(self, metfile):
@@ -23,6 +24,10 @@ class MetfileExporter(object):
         return s
 
     def export_profile(self, profile):
+        measurements = (
+            profile.sorted_measurements if self.want_sorted_measurements
+            else profile.measurements)
+
         s = ("<PROFIEL>{profiel_id},{description},{date},{level_value},"
              "{level_type},{coordinate_type},{number_of_z_values},"
              "{profile_type_placing},{start_x},{start_y},\n").format(
@@ -37,7 +42,7 @@ class MetfileExporter(object):
             start_x=profile.start_x,
             start_y=profile.start_y)
 
-        for measurement in profile.measurements:
+        for measurement in measurements:
             s += self.export_measurement(measurement)
 
         s += "</PROFIEL>\n"

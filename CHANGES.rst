@@ -5,7 +5,8 @@ Changelog of metfilelib
 0.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Make it possible to generate a MET file that sorts its measurements
+  based on the projection on the base line.
 
 
 0.6 (2013-03-27)
