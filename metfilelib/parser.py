@@ -271,12 +271,27 @@ def parse_meting(file_object):
             "Y moet een decimaal getal zijn.",
             "MET_YFLOAT")
 
+    profile_point_type = groups[0]
+    profile_drawing_code = groups[1]
+
+    if (profile_point_type
+        not in metfile.Measurement.ALLOWED_PROFILE_POINT_TYPES):
+        file_object.record_error(
+            "Onbekende profielpunttype {0}".format(profile_point_type),
+            "MET_UNKNOWN_PROFILE_POINT_TYPE")
+
+    if (profile_drawing_code
+        not in metfile.Measurement.ALLOWED_DRAWING_CODES):
+        file_object.record_error(
+            "Onbekende profieltekencode {0}".format(profile_drawing_code),
+            "MET_UNKNOWN_PROFILE_DRAWING_CODE")
+
     file_object.next()
 
     return metfile.Measurement(
         line_number=line_number,
-        profile_point_type=groups[0],
-        profile_point_drawing_code=groups[1],
+        profile_point_type=profile_point_type,
+        profile_point_drawing_code=profile_drawing_code,
         x=x,
         y=y,
         z1=z1,

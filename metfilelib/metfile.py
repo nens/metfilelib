@@ -89,11 +89,36 @@ class Profile(namedtuple(
             key=lambda measurement: (
                 line.scaled_scalar_projection(measurement.point)))
 
+    @property
+    def water_measurements(self):
+        """Return the 22 codes and the measurements in between
+        (sorted)"""
+        water_indices = []
+        measurements = list(self.sorted_measurements)
+
+        for i, measurement in enumerate(measurements):
+            if measurement.profile_point_type == '22':
+                water_indices.append(i)
+
+        if len(water_indices) != 2:
+            # Can't do this
+            return None
+
+        return measurements[water_indices[0]:water_indices[1] + 1]
+
 
 class Measurement(namedtuple(
    'Measurement',
    'line_number, profile_point_type, profile_point_drawing_code, x, y, z1, z2'
         )):
+    ALLOWED_PROFILE_POINT_TYPES = set(
+        ('1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '
+         '22 98 99').split())
+
+    ALLOWED_DRAWING_CODES = set(
+        ('5 10 15 17 19 23 24 25 27 29 30 32 34 35 37 39 41 43 45 49 '
+         '50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 '
+         '88 90 92 94 96 98 130 135 140 150 999').split())
 
     @property
     def point(self):
