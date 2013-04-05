@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.8 (unreleased)
+0.8 (2013-04-05)
 ----------------
 
 - Add lists of all the existing profile point codes and drawing codes,
