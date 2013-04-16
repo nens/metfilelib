@@ -5,8 +5,11 @@ Changelog of metfilelib
 0.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed bug where date format error message was shown on the wrong
+  line (lizard-progress #66).
 
+- Added test for #69, but it's working correctly. Perhaps an old
+  version?
 
 0.8 (2013-04-05)
 ----------------

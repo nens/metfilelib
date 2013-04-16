@@ -117,3 +117,14 @@ class TestParseMeting(TestCase):
         parser.parse_meting(reader)
 
         self.assertFalse(reader.success)
+
+    def test_missing_bekleding_code(self):
+        """What if we remove the 999. Issue #69 says that that does
+        not result in an error."""
+        reader = get_mock_reader([
+            b"<METING>22,,152168.401,444100.055,2.206,2.206</METING>\n"
+            ])
+
+        parser.parse_meting(reader)
+
+        self.assertFalse(reader.success)

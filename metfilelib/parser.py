@@ -167,6 +167,13 @@ def parse_profile(file_object):
             "MET_STARTYFLOAT")
         start_y = 0
 
+    date_measurement = parse_date(match.group(3))
+    if date_measurement is None:
+        file_object.record_error(
+      "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
+            "MET_WRONGDATE")
+        return
+
     file_object.next()
 
     measurements = []
@@ -181,13 +188,6 @@ def parse_profile(file_object):
             "MET_NOENDPROFIEL")
     else:
         file_object.next()
-
-    date_measurement = parse_date(match.group(3))
-    if date_measurement is None:
-        file_object.record_error(
-      "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
-            "MET_WRONGDATE")
-        return
 
     return metfile.Profile(
         line_number=line_number,
