@@ -11,6 +11,9 @@ Changelog of metfilelib
 - Added test for #69, but it's working correctly. Perhaps an old
   version?
 
+- Export to MET file used a wrong date format, fixed.
+
+
 0.8 (2013-04-05)
 ----------------
 

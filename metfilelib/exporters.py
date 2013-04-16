@@ -28,7 +28,7 @@ class MetfileExporter(object):
             profile.sorted_measurements if self.want_sorted_measurements
             else profile.measurements)
 
-        s = ("<PROFIEL>{profiel_id},{description},{date},{level_value},"
+        s = ("<PROFIEL>{profiel_id},{description},{date:%Y%m%d},{level_value},"
              "{level_type},{coordinate_type},{number_of_z_values},"
              "{profile_type_placing},{start_x},{start_y},\n").format(
             profiel_id=profile.id,
