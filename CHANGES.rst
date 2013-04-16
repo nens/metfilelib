@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.9 (unreleased)
+0.9 (2013-04-16)
 ----------------
 
 - Fixed bug where date format error message was shown on the wrong
