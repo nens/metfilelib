@@ -172,7 +172,6 @@ def parse_profile(file_object):
         file_object.record_error(
       "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
             "MET_WRONGDATE")
-        return
 
     file_object.next()
 

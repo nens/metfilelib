@@ -5,7 +5,7 @@ Changelog of metfilelib
 0.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Fixes bug with infinite loop in case of wrong date format.
 
 
 0.9 (2013-04-16)
