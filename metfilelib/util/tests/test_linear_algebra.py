@@ -14,6 +14,10 @@ from unittest import TestCase
 
 from metfilelib.util import linear_algebra
 
+# Things aren't as exact as we'd like
+EPSILON = 0.000000001
+
+
 
 class TestPoint(TestCase):
     def test_multiply(self):
@@ -97,9 +101,17 @@ class TestLine(TestCase):
 
         self.assertEquals(p1_p, p2_p)
 
-        # Things aren't as exact as we'd like
-        epsilon = 0.000000001
-
         # Check that p1_p is more or less (2, 2)
-        self.assertTrue(abs(p1_p.x - 2) < epsilon)
-        self.assertTrue(abs(p1_p.y - 2) < epsilon)
+        self.assertTrue(abs(p1_p.x - 2) < EPSILON)
+        self.assertTrue(abs(p1_p.y - 2) < EPSILON)
+
+    def test_distance_to_line(self):
+        """Wrote down an example on paper using a 3,4,5 triangle and a
+        smaller one of the same shape... The point projects to (2.25,
+        3)."""
+        l = linear_algebra.Line(
+            start=linear_algebra.Point(0, 0),
+            end=linear_algebra.Point(2.25, 3))
+        p = linear_algebra.Point(6.25, 0)
+
+        self.assertEquals(l.distance(p), 5)

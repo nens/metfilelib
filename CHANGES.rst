@@ -5,7 +5,11 @@ Changelog of metfilelib
 0.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added a helper function to linear_algebra that calculates the
+  distance of a point to a line.
+
+- Measurement.point now returns None if something is wrong with one of
+  the coordinates.
 
 
 0.10 (2013-04-22)

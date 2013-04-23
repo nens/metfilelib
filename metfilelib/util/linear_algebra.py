@@ -99,6 +99,11 @@ class Line(namedtuple('Line', 'start, end')):
         return the angle between them."""
         pass
 
+    def distance(self, point):
+        """Return the distance between point and its projection onto
+        this line."""
+        return self.project(point).distance(point)
+
 
 def line_segments(points):
     """Return a list of lines, one from point 0 to 1, one from point 1

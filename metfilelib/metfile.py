@@ -122,4 +122,7 @@ class Measurement(namedtuple(
 
     @property
     def point(self):
+        if not isinstance(self.x, float) or not isinstance(self.y, float):
+            return None
+
         return linear_algebra.Point(x=self.x, y=self.y)
