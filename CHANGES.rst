@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.11 (unreleased)
+0.11 (2013-04-23)
 -----------------
 
 - Added a helper function to linear_algebra that calculates the
