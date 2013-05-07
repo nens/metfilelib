@@ -5,7 +5,7 @@ Changelog of metfilelib
 0.12 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Moved DXF generation from lizard_progress to here.
 
 
 0.11 (2013-04-23)
