@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.13 (unreleased)
+0.13 (2013-09-16)
 -----------------
 
 - Add missing drawing point code '47'.
