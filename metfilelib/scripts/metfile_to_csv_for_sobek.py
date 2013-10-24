@@ -52,9 +52,9 @@ def main():
     for series in metfile.series:
         for profile in series.profiles:
             line = profile.line
-            for measurement in profile.measurements:
-                print("{profile_id},{dist},{z}".format(
-                    profile_id=profile.id,
+            for measurement in profile.sorted_measurements:
+                print("{profile},{dist},{z}".format(
+                    profile=profile.description,
                     dist=line.distance_to_midpoint(measurement.point),
                     z=max(measurement.z1, measurement.z2)))
 
