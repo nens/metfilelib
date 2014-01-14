@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.14 (unreleased)
+0.14 (2014-01-14)
 -----------------
 
 - Add 'start_point' property to Profile.
