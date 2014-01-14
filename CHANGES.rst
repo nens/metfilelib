@@ -5,7 +5,9 @@ Changelog of metfilelib
 0.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add 'start_point' property to Profile.
+
+- Add 'as_wkt' property to Point.
 
 
 0.13 (2013-09-16)

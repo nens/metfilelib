@@ -106,6 +106,10 @@ class Profile(namedtuple(
 
         return measurements[water_indices[0]:water_indices[1] + 1]
 
+    @property
+    def start_point(self):
+        return linear_algebra.Point(x=self.start_x, y=self.start_y)
+
 
 class Measurement(namedtuple(
    'Measurement',

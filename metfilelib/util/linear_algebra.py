@@ -45,6 +45,11 @@ class Point(namedtuple('Point', 'x, y')):
     def __eq__(self, point):
         return (self.x == point.x) and (self.y == point.y)
 
+    @property
+    def as_wkt(self):
+        return b'POINT({x} {y})'.format(x=self.x, y=self.y)
+
+
 ORIGIN = Point(x=0.0, y=0.0)
 
 
