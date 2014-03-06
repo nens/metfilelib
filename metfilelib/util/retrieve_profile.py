@@ -13,7 +13,8 @@ def retrieve(metfile, profile_id):
     (series_id, series_name, profile_object)
     """
 
-    met = parser.parse_metfile(file_reader.FileReader(metfile))
+    met = parser.parse_metfile(file_reader.FileReader(
+            metfile, skip_empty_lines=True))
 
     for series in met.series:
         for profile in series.profiles:
