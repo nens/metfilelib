@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.15 (unreleased)
+0.15 (2014-03-06)
 -----------------
 
 - Retrieving a profile now also ignores empty lines.
