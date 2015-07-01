@@ -78,7 +78,7 @@ def parse_series(file_object):
                 "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
                 "MET_NOREEKS")
         else:
-            seriesre = re.compile("<REEKS>([\w.-]*),([\w.-]*),</REEKS>")
+            seriesre = re.compile("<REEKS>([^<>,]*),([^<>,]*),</REEKS>")
             match = seriesre.match(l)
 
             if match:
@@ -90,7 +90,7 @@ def parse_series(file_object):
                     "MET_REEKSELEMENTS")
 
                 # Try to continue parsing without the second comma
-                seriesre = re.compile("<REEKS>([\w.-]*),([\w.-]*)</REEKS>")
+                seriesre = re.compile("<REEKS>([^<>,]*),([^<>,]*)</REEKS>")
                 match = seriesre.match(l)
 
         file_object.next()
@@ -122,7 +122,7 @@ def parse_profile(file_object):
             "Profiel regel moet beginnen met <PROFIEL>",
             "MET_NOPROFIEL")
 
-    profilere = re.compile("<PROFIEL>" + 10 * "([\w.-]*),")
+    profilere = re.compile("<PROFIEL>" + 10 * "([^<>,]*),")
     match = profilere.match(l)
 
     if not match:
@@ -221,7 +221,7 @@ def parse_meting(file_object):
         file_object.next()
         return
 
-    metingre = re.compile("<METING>([\d.,-]*)</METING>")
+    metingre = re.compile("<METING>([\d\s.,-]*)</METING>")
     match = metingre.match(l)
 
     try:
