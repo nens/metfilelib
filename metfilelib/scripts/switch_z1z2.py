@@ -17,7 +17,7 @@ def files():
     d = directory()
     for filename in os.listdir(d):
         if (os.path.splitext(filename)[-1].lower() in
-            ('.txt', '.met')):
+           ('.txt', '.met')):
             yield os.path.join(d, filename)
 
 
@@ -29,7 +29,7 @@ class LineReplacer(object):
         self.path = path
 
     def __enter__(self):
-        self.lines = open(path, 'rU').readlines()
+        self.lines = open(self.path, 'rU').readlines()
         self.last_yielded_line = None
         self.changed = False
 

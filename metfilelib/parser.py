@@ -45,8 +45,8 @@ def parse_version(file_object):
                 version = "?"
         else:
             file_object.record_error(
-          "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
-          "MET_NOVERSION")
+                "Versie regel moet beginnen met <VERSIE> en eindigen met </VERSIE>",
+                "MET_NOVERSION")
             version = "?"
         file_object.next()
         return version
@@ -75,8 +75,8 @@ def parse_series(file_object):
     else:
         if not l.startswith("<REEKS>") or not l.endswith("</REEKS>"):
             file_object.record_error(
-          "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
-          "MET_NOREEKS")
+                "Reeks regel moet beginnen met <REEKS> en eindigen met </REEKS>",
+                "MET_NOREEKS")
         else:
             seriesre = re.compile("<REEKS>(.*),(.*),</REEKS>")
             match = seriesre.match(l)
@@ -86,8 +86,8 @@ def parse_series(file_object):
                 series_name = match.group(2)
             else:
                 file_object.record_error(
-              "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
-              "MET_REEKSELEMENTS")
+                    "Reeks regel moet 2 door komma's gevolgde elementen bevatten",
+                    "MET_REEKSELEMENTS")
 
                 # Try to continue parsing without the second comma
                 seriesre = re.compile("<REEKS>(.*),(.*)</REEKS>")
@@ -108,8 +108,8 @@ def parse_series(file_object):
             "MET_NOPROFILES")
 
     return metfile.Series(
-            line_number=line_number, id=series_id,
-            name=series_name, profiles=tuple(profiles))
+        line_number=line_number, id=series_id,
+        name=series_name, profiles=tuple(profiles))
 
 
 def parse_profile(file_object):
@@ -170,7 +170,7 @@ def parse_profile(file_object):
     date_measurement = parse_date(match.group(3))
     if date_measurement is None:
         file_object.record_error(
-      "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
+            "Ongeldige datum, niet in JJJJMMDD formaat: {0}".format(match.group(3)),
             "MET_WRONGDATE")
 
     file_object.next()
@@ -233,8 +233,8 @@ def parse_meting(file_object):
 
     if len(groups) != 6:
         file_object.record_error(
-     "Een <METING> regel moet 6 met komma's gescheiden elementen bevatten",
-     "MET_METINGSIXVALUES")
+            "Een <METING> regel moet 6 met komma's gescheiden elementen bevatten",
+            "MET_METINGSIXVALUES")
         file_object.next()
         return
 
@@ -274,13 +274,13 @@ def parse_meting(file_object):
     profile_drawing_code = groups[1]
 
     if (profile_point_type
-        not in metfile.Measurement.ALLOWED_PROFILE_POINT_TYPES):
+            not in metfile.Measurement.ALLOWED_PROFILE_POINT_TYPES):
         file_object.record_error(
             "Onbekende profielpunttype {0}".format(profile_point_type),
             "MET_UNKNOWN_PROFILE_POINT_TYPE")
 
     if (profile_drawing_code
-        not in metfile.Measurement.ALLOWED_DRAWING_CODES):
+            not in metfile.Measurement.ALLOWED_DRAWING_CODES):
         file_object.record_error(
             "Onbekende profieltekencode {0}".format(profile_drawing_code),
             "MET_UNKNOWN_PROFILE_DRAWING_CODE")
@@ -305,7 +305,7 @@ def parse_date(date_string):
 
     try:
         return datetime.date(int(date_string[:4]),
-                         int(date_string[4:6]),
-                         int(date_string[6:8]))
+                             int(date_string[4:6]),
+                             int(date_string[6:8]))
     except ValueError:
         return None

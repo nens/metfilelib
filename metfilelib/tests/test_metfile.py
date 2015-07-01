@@ -12,7 +12,6 @@ from __future__ import division
 from unittest import TestCase
 
 from metfilelib import parser
-from metfilelib import metfile
 
 from metfilelib.tests.test_parser import get_mock_reader
 
@@ -20,16 +19,16 @@ from metfilelib.tests.test_parser import get_mock_reader
 class TestProfile(TestCase):
     def test_this_example_appears_to_loop_forever(self):
         reader = get_mock_reader([
-                b"<PROFIEL>W81-2_1,Profiel_1,20130114,0,NAP,ABS,2,XY,112372.752,485955.504,\n",
-                b"<METING>2,999,15.0,15.0,-5.241,-5.241</METING>\n",
-                b"<METING>1,999,-5.0,-5.0,-4.255,-4.255</METING>\n",
-                b"<METING>22,999,0.0,0.0,-5.824,-5.824</METING>\n",
-                b"<METING>22,999,10.0,10.0,-5.824,-5.824</METING>\n",
-                b"<METING>5,999,2.0,2.0,-5.874,-5.844</METING>\n",
-                b"<METING>5,999,4.0,4.0,-6.044,-5.984</METING>\n",
-                b"<METING>5,999,7.0,7.0,-6.084,-6.02</METING>\n",
-                b"</PROFIEL>\n"
-                ])
+            b"<PROFIEL>W81-2_1,Profiel_1,20130114,0,NAP,ABS,2,XY,112372.752,485955.504,\n",
+            b"<METING>2,999,15.0,15.0,-5.241,-5.241</METING>\n",
+            b"<METING>1,999,-5.0,-5.0,-4.255,-4.255</METING>\n",
+            b"<METING>22,999,0.0,0.0,-5.824,-5.824</METING>\n",
+            b"<METING>22,999,10.0,10.0,-5.824,-5.824</METING>\n",
+            b"<METING>5,999,2.0,2.0,-5.874,-5.844</METING>\n",
+            b"<METING>5,999,4.0,4.0,-6.044,-5.984</METING>\n",
+            b"<METING>5,999,7.0,7.0,-6.084,-6.02</METING>\n",
+            b"</PROFIEL>\n"
+        ])
 
         profile = parser.parse_profile(reader)
 
