@@ -46,7 +46,7 @@ class LineReplacer(object):
         return self.lines[line_to_yield]
 
     def replace(self, l):
-        print('line {num} becomes {l}'.format(num=self.last_yielded_line, l=l)
+        print('line {num} becomes {l}'.format(num=self.last_yielded_line, l=l))
         if self.lines[self.last_yielded_line] != l:
             self.lines[self.last_yielded_line] = l
             self.changed = True
@@ -67,7 +67,7 @@ def switched(line):
 
 def switch_z1z2():
     for path in files():
-        print("Processing '{path}'.".format(path=path)
+        print("Processing '{path}'.".format(path=path))
         with LineReplacer(path) as replacer:
             for line in replacer:
                 replacer.replace(switched(line))
