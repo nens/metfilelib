@@ -63,6 +63,19 @@ class TestParseSeries(TestCase):
         print(reader.errors)
         self.assertTrue(reader.success)
 
+    def test_invalid_characters_in_reeks(self):
+        reader = get_mock_reader([
+            b"<REEKS>deeleen,deeltw<ee,</REEKS>\n",
+            b"<PROFIEL>O-BR00001927_516,PROFIEL_516,20120421,0.00,NAP,ABS,2,XY,152168.401,444100.055,\n",
+            b"<METING>22,999,152168.401,444100.055,2.206,2.206</METING>\n",
+            b"<METING>99,999,152168.475,444100.136,1.556,1.661</METING>\n",
+            b"</PROFIEL>\n"
+        ])
+
+        result = parser.parse_series(reader)
+        self.assertFalse(reader.success)
+        self.assertNotEqual(result, None)
+
     def test_error_with_a_result_when_second_comma_missing(self):
         reader = get_mock_reader([
             b"<REEKS>deeleen,deeltwee</REEKS>\n",
@@ -92,6 +105,22 @@ class TestParseProfiel(TestCase):
         ])
         parser.parse_profile(reader)
         self.assertEquals(reader.line_number, 10)
+
+    def test_invalid_characters_in_profiel(self):
+        reader = get_mock_reader([
+            b"<PROFIEL>W81-2_1,Profiel_1,20130114,0,NA>P,ABS,2,XY,112372.752,485955.504,\n",
+            b"<METING>2,999,15.0,15.0,-5.241,-5.241</METING>\n",
+            b"<METING>1,999,-5.0,-5.0,-4.255,-4.255</METING>\n",
+            b"<METING>22,999,0.0,00,-5.824,-5.824</METING>\n",
+            b"<METING>22,999,10.0,10.0,-5.824,-5.824</METING>\n",
+            b"<METING>5,999,2.0,2.>0,-5.874,-5.844</METING>\n",
+            b"<METING>5,999,4.0,4.0,-6.044,-5.984</METING>\n",
+            b"<METING>5,999,7.0,7.0,-6.084,-6.02</METING>\n",
+            b"</PROFIEL>\n"
+        ])
+
+        parser.parse_profile(reader)
+        self.assertFalse(reader.success)
 
 
 class TestParseMeting(TestCase):
@@ -123,6 +152,15 @@ class TestParseMeting(TestCase):
         not result in an error."""
         reader = get_mock_reader([
             b"<METING>22,,152168.401,444100.055,2.206,2.206</METING>\n"
+        ])
+
+        parser.parse_meting(reader)
+
+        self.assertFalse(reader.success)
+
+    def test_invalid_character(self):
+        reader = get_mock_reader([
+            b"<METING>22,999,152.401,444100.>055,2.206,2.206</METING>\n"
         ])
 
         parser.parse_meting(reader)
