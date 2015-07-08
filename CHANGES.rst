@@ -5,7 +5,7 @@ Changelog of metfilelib
 0.16 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Constrain allowed characters in meting, profiel and reeks.
 
 
 0.15 (2014-03-06)
