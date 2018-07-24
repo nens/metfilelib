@@ -2,7 +2,7 @@ Changelog of metfilelib
 ===================================================
 
 
-0.17 (unreleased)
+0.17 (2018-07-24)
 -----------------
 
 - Added profile point type 200 (riet).
