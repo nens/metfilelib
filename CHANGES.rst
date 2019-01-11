@@ -5,7 +5,7 @@ Changelog of metfilelib
 0.18 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Turns out it had to be drawing type 200.
 
 
 0.17 (2018-07-24)

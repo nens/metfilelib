@@ -117,12 +117,12 @@ class Measurement(namedtuple(
         )):
     ALLOWED_PROFILE_POINT_TYPES = set(
         ('1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 '
-         '22 98 99 200').split())
+         '22 98 99').split())
 
     ALLOWED_DRAWING_CODES = set(
         ('5 10 15 17 19 23 24 25 27 29 30 32 34 35 37 39 41 43 45 47 49 '
          '50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 '
-         '88 90 92 94 96 98 130 135 140 150 999').split())
+         '88 90 92 94 96 98 130 135 140 150 200 999').split())
 
     @property
     def point(self):
